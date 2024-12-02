@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-app
+  namespace: keycloak-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: keycloak-app
+  template:
+    metadata:
+      labels:
+        app: keycloak-app
+    spec:
+      containers:
+        - name:  kc-app
+          image: ****
+          command: ["/opt/keycloak/bin/kc.sh", "start"]
+          args: ["--optimized"]
+          env:
+            - name: JAVA_OPTS_APPEND
+              value: -Djgroups.dns.query=keycloak-headless-service.keycloak-system.svc.cluster.local
+            - name: KC_CACHE_STACK
+              value: kubernetes
+            - name: KC_HOSTNAME
+              value: '****'
+            - name: KC_HTTP_ENABLED
+              value: 'true'
+            - name: KC_PROXY
+              value: edge
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: ****
+                  key: KC_ADMIN_ID
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ****
+                  key: KC_ADMIN_PASSWORD
+            - name: KC_DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-storage-class-app
+                  key: jdbc-uri
