@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name:  kc-app
-          image: ****
+          image: ghcr.io/lacrosse1991/keycloak:17
           command: ["/opt/keycloak/bin/kc.sh", "start"]
           args: ["--optimized"]
           env:
