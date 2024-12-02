@@ -1,0 +1,30 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql-storage-class
+spec:
+  instances: 3
+
+  # Example of rolling update strategy:
+  # - unsupervised: automated update of the primary once all
+  #                 replicas have been upgraded (default)
+  # - supervised: requires manual supervision to perform
+  #               the switchover of the primary
+  primaryUpdateStrategy: unsupervised
+
+  # Persistent storage configuration
+  storage:
+    storageClass: longhorn-single-replica
+    size: 1Gi
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://keycloak/
+      endpointURL: http://minio-service.minio-service.svc.cluster.local:9000/
+      s3Credentials:
+        accessKeyId:
+          name: ****
+          key: S3_ACCESS_KEY_ID
+        secretAccessKey:
+          name: ****
+          key: S3_ACCESS_SECRET_KEY
+    retentionPolicy: "30d"
