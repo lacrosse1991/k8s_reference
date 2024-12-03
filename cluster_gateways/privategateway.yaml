@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: private-gateway
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  gatewayClassName: cilium
+  listeners:
+  - protocol: HTTPS
+    port: 443
+    name: prv-gateway
+    hostname: "*.int.my.domain"
+    allowedRoutes:
+      namespaces:
+        from: All
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - name: int-my-domain-tls
