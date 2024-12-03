@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-gateways
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - path: cluster_gateways
+      repoURL: git@github.com:lacrosse1991/k8_apps.git
+      targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cluster-gateways
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
